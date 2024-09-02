@@ -2,9 +2,7 @@
 
 ## Description
 
-```
-今天要在分散式系統中實現一個限時競標拍賣功能，需顯示最新價格、下標更新以及最終的成交，請使用Golang撰寫一個簡單的範例，重點考慮下標時可能出現的競爭（Race Condition）情境
-```
+> 今天要在分散式系統中實現一個限時競標拍賣功能，需顯示最新價格、下標更新以及最終的成交，請使用 Golang 撰寫一個簡單的範例，重點考慮下標時可能出現的競爭（Race Condition）情境
 
 ## Prerequisite
 
@@ -81,9 +79,7 @@ Lua 這個腳本來替我們完成。
 
 Redis 的 Docs 中 Atomicity with Lua 提到：
 
-```
-Redis has the ability to execute Lua scripts on the server side. Lua scripts are executed atomically, that is, no other script or command will run while a script is running, which gives us the same transactional semantics as MULTI / EXEC.
-```
+> Redis has the ability to execute Lua scripts on the server side. Lua scripts are executed atomically, that is, no other script or command will run while a script is running, which gives us the same transactional semantics as MULTI / EXEC.
 
 當我們把競標的邏輯寫在 Lua 中，便可以確保 Redis 在執行一筆競價中保持原子性，並且因為 Redis
 是 in-memory i/o 所以可以確保它的高效率
