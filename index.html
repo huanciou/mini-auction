@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auction</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    #currentPrice { font-size: 24px; margin-bottom: 20px; }
+    input, button { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Auction</h1>
+  <div id="currentPrice">Current Price: 0</div>
+  <input id="bidInput" type="number" placeholder="Enter your bid" />
+  <button id="bidButton">Place Bid</button>
+
+  <script>
+    const socket = io();
+    const currentPriceDiv = document.getElementById('currentPrice');
+    const bidInput = document.getElementById('bidInput');
+    const bidButton = document.getElementById('bidButton');
+
+    function updatePrice(price) {
+      currentPriceDiv.textContent = `Current Price: $${price}`;
+    }
+
+
+    socket.on('reply', (msg) => {  
+        const newPrice = msg;
+        updatePrice(newPrice);
+    });
+
+    bidButton.addEventListener('click', () => {
+      const bid = bidInput.value.trim();
+      if (bid) {
+        console.log(bid)
+        socket.emit('notice', bid);
+        bidInput.value = '';  
+      }
+    });
+
+    bidInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        bidButton.click();
+      }
+    });
+  </script>
+</body>
+</html>
