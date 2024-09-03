@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"mini-auction/middlewares"
 	"mini-auction/models"
 	"mini-auction/utils"
 	"strconv"
@@ -16,7 +17,7 @@ func Auction(c *gin.Context) {
 func GetAuction() string {
 	result, err := models.Client.EvalSha(models.Ctx, utils.QueryHash, []string{"product:1"}).Result()
 	if err != nil {
-		panic(err)
+		panic(&(middlewares.ServerInternalError{Message: err.Error()}))
 	}
 
 	data, ok := result.([]interface{})
@@ -33,7 +34,7 @@ func PostAuction(bid int, bidder string) (bool, int64) {
 	bidStr := strconv.Itoa(bid)
 	result, err := models.Client.EvalSha(models.Ctx, utils.UpdateHash, nil, bidStr, bidder).Result()
 	if err != nil {
-		panic(err)
+		panic(&(middlewares.ServerInternalError{Message: err.Error()}))
 	}
 
 	if int64(bid) < result.(int64) {

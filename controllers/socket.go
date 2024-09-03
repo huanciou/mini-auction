@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"log"
+	"mini-auction/middlewares"
 	"strconv"
 	"sync"
 
@@ -32,14 +33,16 @@ func SetupSocketIO() *socketio.Server {
 
 	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
 		fmt.Println("Received message:", msg)
-		bid, _ := strconv.Atoi(msg)
+		bid, err := strconv.Atoi(msg)
+		if err != nil {
+			panic(&(middlewares.ValidationError{Message: "NaN"}))
+		}
 
 		success, price := PostAuction(bid, "John Doe")
 
 		if success {
 			server.BroadcastToNamespace("/", "reply", price)
 		} else {
-
 			message := "Your bid is lower"
 			s.Emit("reply", message)
 		}

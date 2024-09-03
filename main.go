@@ -1,6 +1,7 @@
 package main
 
 import (
+	"mini-auction/middlewares"
 	"mini-auction/models"
 	"mini-auction/routes"
 	"mini-auction/utils"
@@ -16,8 +17,9 @@ func init() {
 func main() {
 	router := gin.New()
 
+	router.Use(middlewares.ErrorHandler())
+
 	routes.RegisterSocketRoutes(router)
-	// routes.RegisterAPIRoutes(router)
 	routes.RegisterAuctionRoutes(router)
 
 	router.Run(":3000")
